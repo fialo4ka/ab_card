@@ -1,40 +1,64 @@
 import * as  SQLite  from "expo-sqlite";
 import * as FileSystem from "expo-file-system";
+import Word from "../Models/Word"
+import Result from "../Models/Result";
+import * as dataHelper from "./dataHelper";
 
-
-export { openDatabase};
+export { getNewWord };
 
 
 let db;
 
 async function openDatabase() {
-  let exist = (
-    await FileSystem.getInfoAsync(FileSystem.documentDirectory + "SQLite/db.db")
-  ).exists;
-  console.log("before " + (exist ? "yes" : "no"));
-  db = SQLite.openDatabase("ab.db");
-  if (!exist) {
-    db.transaction(
-      (tx) => {
-        tx.executeSql(
-          "create table test (id integer primary key not null, done int, stroka);"
-        );
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
-  db.transaction(
-    (tx) => {
-      tx.executeSql("select stroka from test", [], (_, { rows }) =>
-        console.log(JSON.stringify(rows))
-      );
-    },
-    (error) => {
-      console.log(error);
+    let exist = (
+        await FileSystem.getInfoAsync(
+        FileSystem.documentDirectory + "SQLite/ab_db.db"
+        )
+    ).exists;
+    if (!exist) {
+        createTables();
     }
-  );
-  return exist ? "yes" : "no";
+    console.log("db checked");
 }
 
+function createTables() {
+  Word.createTable();
+  Result.createTable();
+  dataHelper.fillWordTable(); 
+
+}
+
+async function getWorldMax() {
+    await openDatabase();
+    db = SQLite.openDatabase("ab_db.db");
+    return new Promise((resolve, reject) => {
+      db.transaction(
+        (tx) => {
+          tx.executeSql(
+            "select count(*) as count from word",
+            [],
+            (_, { rows }) => {
+              console.log(JSON.stringify(rows));
+              console.log("rows.count = " + rows.item(0).count);
+              resolve(rows.item(0).count);
+            }
+          );
+        },
+        (error) => {
+          console.log(error);
+          reject();
+        }
+      );
+    });
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max) + 1;
+}
+
+async function getNewWord(){
+    let maxId = await getWorldMax();
+    let id = getRandomInt(maxId);
+    console.log("id = " + id);
+    return await Word.find(id);   
+  }

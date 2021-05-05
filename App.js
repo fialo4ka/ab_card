@@ -1,23 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import {  Text, View } from 'react-native';
+import React, { useEffect, useState, Component } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
 import { styles } from "./src/Theme/Style";
 import * as dbHelpers from "./src/Helpers/dbHelper"
 
 export default function App() {
-  {
-    dbHelpers.openDatabase().then((data) => {
-      console.log(data);
-      return data;
-    });
-  }
-  
+    const [dataLoading, finishLoading] = useState(true);
+    const [word, setData] = useState([]);
+    
+    const dataHandler = () => {
+          finishLoading(true);
+          dbHelpers.getNewWord().then((value) => {
+            setData(value);
+            console.log(value);
+            finishLoading(false);
+          });
+        };
+    
+    useEffect(() => {
+        dataHandler();
+      }, []); 
   return (
     <View style={styles.v1}>
-      <Text style={styles.h1}>
-        Open up App.js to start working on your app!
-      </Text>
-      <StatusBar style="auto" />
+      {dataLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <Text style={styles.h1}>{word.word}</Text>
+      )}
     </View>
   );
 }
