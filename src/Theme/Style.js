@@ -15,4 +15,7 @@ export const styles = StyleSheet.create({
     color: variables.mainDarkColor(),
     backgroundColor: "#ff0",
   },
+  v1:{
+    margin: 20,
+  }
 });
