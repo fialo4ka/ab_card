@@ -1,13 +1,18 @@
-import { Platform, Dimensions, PixelRatio } from 'react-native';
+export { mainOkColor, whiteColor, mainNotColor };
 
-let white = '#fff';
-let mainDark = '#f00';
+let white = '#ffffff';
+let mainOk = "#00A31C";
+let mainNot = "#D51000";
 
 
-function mainDarkColor() {
-      return mainDark;
+function mainOkColor() {
+      return mainOk;
 }
-function whitekColor() {
+
+function mainNotColor() {
+  return mainNot;
+}
+
+function whiteColor() {
   return white;
 }
-export { mainDarkColor, whitekColor }

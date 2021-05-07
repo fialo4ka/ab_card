@@ -3,8 +3,14 @@ import Word from "../Models/Word";
 export { fillWordTable };
 
 function fillWordTable() {
-    let i = 2;
+    let i = 1;
     let props = {
+      id: i,
+      word: "da",
+      level: "A1.1",
+    };
+    Word.create(new Word(props));
+    props = {
         id: i,
         word: "Hallo",
         level: "A1.1",
