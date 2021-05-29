@@ -1,8 +1,8 @@
 export { mainOkColor, whiteColor, mainNotColor };
 
 let white = '#ffffff';
-let mainOk = "#00A31C";
-let mainNot = "#D51000";
+let mainOk = "#000495";
+let mainNot = "#D59F00";
 
 
 function mainOkColor() {
